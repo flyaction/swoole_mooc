@@ -5,7 +5,7 @@
 	$http->set(
 		[
         	'enable_static_handler' => true,
-        	'document_root' => "/alidata/www/swoole/mooc/thinkphp/public/static",
+        	'document_root' => "/alidata/www/swoole/imooc/thinkphp/public/static",
     	]
 	);
 
