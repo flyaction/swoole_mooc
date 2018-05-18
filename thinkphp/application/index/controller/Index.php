@@ -8,11 +8,7 @@ class Index
 {
     public function index()
     {
-
-
-        //echo "<pre>";
-        //print_r($_GET);
-        return 'hello index';
+        return '';
 
     }
 

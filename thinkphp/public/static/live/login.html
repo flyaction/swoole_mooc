@@ -95,18 +95,17 @@
 		  $('#authCodeBtn').click(function (event) {
 
 			    var phone_num = $(" input[ name='phone_num' ] ").val()
-				url = "http://123.57.204.35:8811?s=send/index&phone_num="+phone_num;
+				url = "http://123.57.204.35:8811?s=/index/send/index&phone_num="+phone_num;
 				$(this).html('已发送').attr('disabled', true);
 				// $.post()
 				$.get(url, function (data) {
-					// TODO: 将下面3行代码删除
-					if (data.status == 'ok') {
+					if (data.status == '1') {
 						alert('发送完成');
 					}
 					// if (result.status != 'ok') {
 					// 	alert('网络错误');
 					// }
-				});
+				},'json');
 			});
 
 			// 提交表单
@@ -114,10 +113,14 @@
 				event.preventDefault();
 				var formData = $('form').serialize();
 				// TODO: 请求后台接口跳转界面，前端跳转或者后台跳
-				$.get("https://www.easy-mock.com/mock/5ab1188bddac7967e4398146/example/query?"+formData, function (data) {
-					console.log("https://www.easy-mock.com/mock/5ab1188bddac7967e4398146/example/query?" + formData);
-					// location.href='index.html';
-				});
+				$.get("http://123.57.204.35:8811?s=/index/login/index&"+formData, function (data) {
+                    if(data.status == '1'){
+                        location.href='index.html';
+                    }else{
+                        alert('登录失败');
+                    }
+
+				},'json');
 			});
 
 			// 返回上一页
