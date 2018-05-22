@@ -17,6 +17,11 @@ class Index
         return 'hello,' . $name;
     }
 
+    public function test()
+    {
+        return 'hello,test';
+    }
+
     public function sms(){
 
         try
