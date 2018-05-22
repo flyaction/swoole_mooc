@@ -8,8 +8,14 @@ class Ws {
 
     public $ws = null;
     public function __construct() {
-        $this->ws = new swoole_websocket_server(self::HOST, self::PORT);
 
+        //清空用户连接集合
+//        if(\app\common\lib\redis\Predis::getInstance()->sMembers(config('redis.live_game_key'))){
+//            \app\common\lib\redis\Predis::getInstance()->del(config('redis.live_game_key'));
+//        }
+
+
+        $this->ws = new swoole_websocket_server(self::HOST, self::PORT);
         $this->ws->set(
             [
                 'enable_static_handler' => true,
@@ -42,6 +48,7 @@ class Ws {
 
         // 加载基础文件
         //require __DIR__ . '/../thinkphp/base.php';
+
     }
 
     /*
@@ -114,7 +121,7 @@ class Ws {
         //分发task异步任务,让不同的任务走不同的逻辑
         $obj = new app\common\lib\task\Task();
         $method = $data['method'];
-        $flag = $obj->$method($data['data']);
+        $flag = $obj->$method($data['data'],$serv);
         return $flag;
     }
 
@@ -134,6 +141,7 @@ class Ws {
      * @param $request
      */
     public function onOpen($ws, $request) {
+        \app\common\lib\redis\Predis::getInstance()->sAdd(config('redis.live_game_key'),$request->fd);
         var_dump($request->fd);
     }
 
@@ -153,6 +161,7 @@ class Ws {
      * @param $fd
      */
     public function onClose($ws, $fd) {
+        \app\common\lib\redis\Predis::getInstance()->sRem(config('redis.live_game_key'),$fd);
         echo "clientid:{$fd}\n";
     }
 }

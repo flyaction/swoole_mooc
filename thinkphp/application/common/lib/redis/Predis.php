@@ -59,12 +59,20 @@ class Predis {
         return $this->redis->get($key);
     }
 
+
     /**
      * @param $key
      * @return array
      */
     public function sMembers($key) {
         return $this->redis->sMembers($key);
+    }
+
+    /*
+     * del
+     */
+    public function del($key){
+        return $this->redis->del($key);
     }
 
     /**

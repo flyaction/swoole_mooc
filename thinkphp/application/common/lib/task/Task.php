@@ -14,7 +14,7 @@ class Task {
      * @param $data
      * @param $serv swoole server对象
      */
-    public function sendSms($data) {
+    public function sendSms($data,$serv) {
         try {
             $response = Sms::sendSms($data['phone'], $data['code']);
         }catch (\Exception $e) {
@@ -36,7 +36,7 @@ class Task {
      * @param $data
      * @param $serv swoole server对象
      */
-    public function pushLive($data, $serv) {
+    public function pushLive($data,$serv) {
         $clients = Predis::getInstance()->sMembers(config("redis.live_game_key"));
 
         foreach($clients as $fd) {
