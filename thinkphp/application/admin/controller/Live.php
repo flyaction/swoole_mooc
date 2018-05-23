@@ -2,19 +2,14 @@
 namespace app\admin\controller;
 use app\common\lib\Util;
 use app\common\lib\redis\Predis;
+use think\Exception;
+
 class Live
 {
 
     public function push() {
 
-//        //这里有问题，swoole_server::$connections
-//        foreach($_POST['http_server']->connections as $fd)
-//        {
-//            var_dump($fd);
-//            $_POST['http_server']->push($fd, "hello-".$fd);
-//        }
-
-          //测试推送消息
+        //测试推送消息
 //        $fds = Predis::getInstance()->sMembers(config('redis.live_game_key'));
 //        foreach($fds as $fd){
 //            $_POST['http_server']->push($fd, "hello-".$fd);
@@ -46,6 +41,19 @@ class Live
         //print_r($_GET);
         // 获取连接的用户
         // 赛况的基本信息入库   2、数据组织好 push到直播页面
+
+//        try{
+//            foreach($_POST['http_server']->ports[0]->connections as $fd) {
+//                $_POST['http_server']->push($fd, json_encode($data));
+//            }
+//
+//        }catch (Exception $e){
+//            var_dump($e->getMessage());
+//        }
+
+
+
+
         $taskData = [
             'method' => 'pushLive',
             'data' => $data

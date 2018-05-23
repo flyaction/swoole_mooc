@@ -45,10 +45,10 @@ class Ws {
      */
     public function onWorkerStart($serv, $worker_id) {
         // 定义应用目录
-        define('APP_PATH', __DIR__ . '/../application/');
+        define('APP_PATH', __DIR__ . '/../../../application/');
 
         // 加载框架引导文件
-        require __DIR__ . '/../thinkphp/start.php';
+        require __DIR__ . '/../../../thinkphp/start.php';
 
         // 加载基础文件
         //require __DIR__ . '/../thinkphp/base.php';
@@ -145,7 +145,6 @@ class Ws {
      * @param $request
      */
     public function onOpen($ws, $request) {
-        //print_r($ws);
         \app\common\lib\redis\Predis::getInstance()->sAdd(config('redis.live_game_key'),$request->fd);
         var_dump($request->fd);
     }

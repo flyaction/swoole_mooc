@@ -42,5 +42,9 @@ class Task {
         foreach($clients as $fd) {
             $serv->push($fd, json_encode($data));
         }
+
+//        foreach($serv->ports[0]->connections as $fd) {
+//            $serv->push($fd, json_encode($data));
+//        }
     }
 }
