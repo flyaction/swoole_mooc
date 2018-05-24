@@ -14,7 +14,7 @@ class Index
 
     public function hello($name = 'ThinkPHP5')
     {
-        return 'hello,' . $name;
+        return 'hello,' . $name.time();
     }
 
     public function test()

@@ -1,0 +1,37 @@
+
+
+
+./configure --prefix=/usr/local/nginx --sbin-nginx=/usr/local/nginx/sbin/nginx --conf-path=/usr/local/nginx/conf/nginx.conf --error-log-path//usr/local/nginx/logs/error.log --pid=/usr/local/nginx/logs/nginx.pid --http-log-path=/usr/local/nginx/logs/access.log
+
+
+server{
+
+    .....
+
+    location /{
+         if (!-e $request_filename){
+             proxy_pass http://127.0.0.1:8811;
+         }
+     }
+
+    ......
+}
+
+
+负载均衡
+
+upstream swoole_http{
+    server 127.0.0.1:8811 weight=2;
+    server 127.0.0.1:8822 weight=2;
+}
+
+server{
+    .....
+    location /{
+         if (!-e $request_filename){
+             //proxy_pass http://127.0.0.1:8811;
+            proxy_pass http://swoole_http;
+         }
+     }
+    ......
+}

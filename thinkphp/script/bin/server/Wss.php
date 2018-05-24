@@ -28,6 +28,9 @@ class Ws {
                 'task_worker_num' => 4,
             ]
         );
+
+        $this->ws->on("start", [$this, 'onStart']);
+
         $this->ws->on("open", [$this, 'onOpen']);
         $this->ws->on("message", [$this, 'onMessage']);
 
@@ -39,6 +42,15 @@ class Ws {
 
         $this->ws->start();
     }
+
+
+    /**
+     * @param $server
+     */
+    public function onStart($server) {
+        swoole_set_process_name("live_master");
+    }
+
 
     /*
      * 进程启动回调
@@ -59,6 +71,12 @@ class Ws {
      *
      */
     public function onRequest($request,$response) {
+        //过滤favicon.ico请求
+        if($request->server['request_uri'] == '/favicon.ico') {
+            $response->status(404);
+            $response->end();
+            return ;
+        }
         $_SERVER = [];
         if(isset($request->server)){
             foreach($request->server as $k=>$v){
@@ -92,7 +110,8 @@ class Ws {
                 $_POST[$k] = $v;
             }
         }
-
+        //记录日志
+        $this->writeLog();
         //----
         $_POST['http_server'] = $this->ws;
 
@@ -168,6 +187,29 @@ class Ws {
         \app\common\lib\redis\Predis::getInstance()->sRem(config('redis.live_game_key'),$fd);
         echo "clientid:{$fd}\n";
     }
+
+
+    /**
+     * 记录日志
+     */
+    public function writeLog() {
+        $datas = array_merge(['date' => date("Ymd H:i:s")],$_GET, $_POST, $_SERVER);
+
+        $logs = "";
+        foreach($datas as $key => $value) {
+            $logs .= $key . ":" . $value . " ";
+        }
+
+        swoole_async_writefile(APP_PATH.'../runtime/log/'.date("Ym")."/".date("d")."_access.log", $logs.PHP_EOL, function($filename){
+            // todo
+        }, FILE_APPEND);
+
+    }
 }
 
 new Ws();
+
+
+// 20台机器    agent -> spark (计算) - 》 数据库   elasticsearch  hadoop
+
+// sigterm sigusr1(重启worker进程) usr2
